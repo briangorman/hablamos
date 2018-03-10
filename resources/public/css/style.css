@@ -1,0 +1,59 @@
+/* some style */
+
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+.chat-container {
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    grid-template-rows: 50px 1fr 150px;
+    grid-template-columns: 200px 1fr; 
+    grid-template-areas: "header header"
+                         "sidebar history"
+                         "text-input text-input";
+}
+
+.header {
+    grid-area: header;
+    background-color: grey;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    background-color: whitesmoke;
+    max-height: calc(100vh-200px);
+    overflow-y: scroll;
+}
+
+.history {
+    grid-area: history;
+    background-color: white;
+    max-height: calc(100vh-200px);
+    overflow-y: scroll;
+}
+
+.text-input {
+    grid-area: text-input;
+    background-color: whitesmoke;
+    width: 100%;
+}
+
+.login-container {
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr; 
+    grid-template-areas: ". . ."
+                         ". login ."
+                         ". . .";
+}
+
+.login {
+    grid-area: login;
+    align-self: center;
+    justify-self: center;
+}
