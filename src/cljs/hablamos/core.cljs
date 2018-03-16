@@ -1,7 +1,7 @@
 (ns hablamos.core
   (:require [reagent.core :as reagent :refer [atom]]
             [chord.client :refer [ws-ch]]
-            [cljs.core.async :as a :refer [>! <! put!]])
+            [cljs.core.async :as async])
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
 
 (enable-console-print!)
@@ -12,38 +12,37 @@
 
 (defonce msg-list (atom []))
 (defonce users-set (atom #{}))
-(defonce send-chan (a/chan))
+(defonce send-chan (async/chan))
 
 ;; Websocket Routines
 
 (defn send-msg
   [msg]
-  (put! send-chan msg))
+  (async/put! send-chan msg))
 
 (defn send-msgs
   [svr-chan]
   (go-loop []
-    (when-let [msg (<! send-chan)]
-      (>! svr-chan msg)
+    (when-let [msg (async/<! send-chan)]
+      (async/>! svr-chan msg)
       (recur))))
 
 (defn receive-msgs
   [svr-chan]
   (go-loop []
-    (if-let [msg (<! svr-chan)]
-      (let [new-msg (:message msg)]
-        (do
-          (case (:m-type new-msg)
-            :init-users (reset! users-set (:msg new-msg))
-            :chat (swap! msg-list #(conj %1 (dissoc %2 :m-type)) new-msg)
-            :new-user (swap! users-set #(conj %1 (:msg %2)) new-msg)
-            :user-left (swap! users-set #(disj %1 (:msg %2)) new-msg))
-          (recur)))
+    (if-let [new-msg (:message (<! svr-chan))]
+      (do
+        (case (:m-type new-msg)
+          :init-users (reset! users-set (:msg new-msg))
+          :chat (swap! msg-list conj (dissoc new-msg :m-type))
+          :new-user (swap! users-set conj (:msg new-msg))
+          :user-left (swap! users-set disj (:msg new-msg)))
+        (recur))
       (println "Websocket closed"))))
 
 (defn setup-websockets! []
   (go
-    (let [{:keys [ws-channel error]} (<! (ws-ch "ws://localhost:3449/ws"))]
+    (let [{:keys [ws-channel error]} (async/<! (ws-ch "ws://localhost:3449/ws"))]
       (if error
         (println "Something went wrong with the websocket")
         (do
