@@ -11,7 +11,7 @@
                           :user "test"}))
 
 (defonce msg-list (atom []))
-(defonce users-set (atom #{}))
+(defonce users (atom {}))
 (defonce send-chan (async/chan))
 
 ;; Websocket Routines
@@ -33,10 +33,10 @@
     (if-let [new-msg (:message (<! svr-chan))]
       (do
         (case (:m-type new-msg)
-          :init-users (reset! users-set (:msg new-msg))
+          :init-users (reset! users (:msg new-msg))
           :chat (swap! msg-list conj (dissoc new-msg :m-type))
-          :new-user (swap! users-set conj (:msg new-msg))
-          :user-left (swap! users-set disj (:msg new-msg)))
+          :new-user (swap! users merge (:msg new-msg))
+          :user-left (swap! users dissoc (:msg new-msg)))
         (recur))
       (println "Websocket closed"))))
 
@@ -101,8 +101,8 @@
     [:div {:class "sidebar"}
      [:h5 "Active Users:"]
      (into [:ul]
-           (for [m @users-set]
-             ^{:key m} [:li m]))]))
+           (for [[k v] @users]
+             ^{:key k} [:li v]))]))
 
 (defn chat-view []
   [:div {:class "chat-container"}

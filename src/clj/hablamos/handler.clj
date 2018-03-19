@@ -31,18 +31,19 @@
           ws-ch ([{:keys [message]}]
                  (if message
                    (let [{:keys [msg m-type]} message]
-                     (do
-                       (when (= m-type :new-user)
+                     (if (= m-type :new-user)
+                       (do
                          (swap! users assoc client-id msg)
                          (async/>! ws-ch  {:id (random-uuid)
-                                           :msg (set (vals @users))
-                                           :m-type :init-users}))
-                       (async/>! main-chan message)
-                       (recur)))
+                                           :msg @users
+                                           :m-type :init-users})
+                         (async/>! main-chan (assoc message :msg {client-id (:msg message)})))
+                       (async/>! main-chan message))
+                     (recur))
                    (do
                      (async/untap main-mult client-tap)
                      (async/>! main-chan {:m-type :user-left
-                                          :msg (get @users client-id)})
+                                          :msg client-id})
                      (swap! users dissoc client-id)))))))))
 
 (defroutes app
