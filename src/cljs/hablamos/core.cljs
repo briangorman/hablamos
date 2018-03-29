@@ -1,8 +1,7 @@
 (ns hablamos.core
   (:require [reagent.core :as reagent :refer [atom]]
             [chord.client :refer [ws-ch]]
-            [cljs.core.async :as async])
-  (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
+            [cljs.core.async :as async :include-macros true]))
 
 (enable-console-print!)
 
@@ -22,14 +21,14 @@
 
 (defn send-msgs
   [svr-chan]
-  (go-loop []
+  (async/go-loop []
     (when-let [msg (async/<! send-chan)]
       (async/>! svr-chan msg)
       (recur))))
 
 (defn receive-msgs
   [svr-chan]
-  (go-loop []
+  (async/go-loop []
     (if-let [new-msg (:message (<! svr-chan))]
       (do
         (case (:m-type new-msg)
@@ -41,7 +40,7 @@
       (println "Websocket closed"))))
 
 (defn setup-websockets! []
-  (go
+  (async/go
     (let [{:keys [ws-channel error]} (async/<! (ws-ch "ws://localhost:3449/ws"))]
       (if error
         (println "Something went wrong with the websocket")
