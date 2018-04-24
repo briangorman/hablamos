@@ -41,7 +41,7 @@
 
 (defn setup-websockets! []
   (async/go
-    (let [{:keys [ws-channel error]} (async/<! (ws-ch "ws://localhost:8080/ws"))]
+    (let [{:keys [ws-channel error]} (async/<! (ws-ch "wss://hablamos-chat.herokuapp.com/ws"))]
       (if error
         (println "Something went wrong with the websocket")
         (do
