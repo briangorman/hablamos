@@ -89,4 +89,5 @@
                                                              :output-dir "resources/public/js/compiled/out"
                                                              :main hablamos.core
                                                              :optimizations :advanced
-                                                             :pretty-print false}}}}}})
+                                                             :pretty-print false
+                                                             :closure-defines {hablamos.core/ws-url "wss://hablamos-chat.herokuapp.com/ws"}}}}}}})

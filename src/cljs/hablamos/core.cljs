@@ -3,7 +3,11 @@
             [chord.client :refer [ws-ch]]
             [cljs.core.async :as async :include-macros true]))
 
+(goog-define ws-url "ws://localhost:3449/ws")
+
 (enable-console-print!)
+
+(println ws-url)
 
 (defonce app-state (atom {:text "Hello world!"
                           :active-panel :login
@@ -41,7 +45,7 @@
 
 (defn setup-websockets! []
   (async/go
-    (let [{:keys [ws-channel error]} (async/<! (ws-ch "wss://hablamos-chat.herokuapp.com/ws"))]
+    (let [{:keys [ws-channel error]} (async/<! (ws-ch ws-url))]
       (if error
         (println "Something went wrong with the websocket")
         (do
