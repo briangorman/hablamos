@@ -6,14 +6,28 @@ body {
 }
 
 .chat-container {
-    display: grid;
-    width: 100vw;
-    height: 100vh;
-    grid-template-rows: 50px 1fr 150px;
-    grid-template-columns: 200px 1fr; 
-    grid-template-areas: "header header"
-                         "sidebar history"
-                         "text-input text-input";
+	display: grid;
+	width: 100vw;
+	height: 100vh;
+	grid-template-rows: 50px 1fr 1fr  150px;
+	grid-template-columns: 1fr;
+	grid-template-areas: "header"
+			     "sidebar"
+			     "history"
+			     "text-input";
+}
+
+@media only screen and (min-width: 400px)  {
+	.chat-container {
+		display: grid;
+		width: 100vw;
+		height: 100vh;
+		grid-template-rows: 50px 1fr 150px;
+		grid-template-columns: 200px 1fr;
+		grid-template-areas: "header header"
+				     "sidebar history"
+				     "text-input text-input";
+	}
 }
 
 .header {
