@@ -41,7 +41,7 @@
 
 (defn setup-websockets! []
   (async/go
-    (let [{:keys [ws-channel error]} (async/<! (ws-ch "ws://localhost:3449/ws"))]
+    (let [{:keys [ws-channel error]} (async/<! (ws-ch "ws://localhost:8080/ws"))]
       (if error
         (println "Something went wrong with the websocket")
         (do

@@ -17,35 +17,11 @@
   :plugins [[lein-figwheel "0.5.14"]
             [lein-ancient "0.6.15"]
             [lein-cljsbuild "1.1.7" :exclusions [[org.clojure/clojure]]]]
-
   :source-paths ["src/clj"]
-  :main hablamos.main 
-  
-  :cljsbuild {:builds
-              [{:id "dev" :source-paths ["src/cljs"]
-
-                ;; The presence of a :figwheel configuration here
-                ;; will cause figwheel to inject the figwheel client
-                ;; into your build
-                :figwheel true
-
-                :compiler {:main hablamos.core
-                           :asset-path "js/compiled/out"
-                           :output-to "resources/public/js/compiled/hablamos.js"
-                           :output-dir "resources/public/js/compiled/out"
-                           :source-map-timestamp true}}
-               ;; This next build is a compressed minified build for
-               ;; production. You can build this with:
-               ;; lein cljsbuild once min
-               {:id "min"
-                :source-paths ["src"]
-                :compiler {:output-to "resources/public/js/compiled/hablamos.js"
-                           :main hablamos.core
-                           :optimizations :advanced
-                           :pretty-print false}}]}
-
-  :figwheel {;; :http-server-root "public" ;; default and assumes "resources"
-             :server-port 3449 ;; default
+  :main hablamos.main
+  :aot hablamos.main
+  :resource-paths ["resources"]
+  :figwheel {:server-port 3449 ;; default
              ;; :server-ip "127.0.0.1"
              :server-logfile false
              :css-dirs ["resources/public/css"] ;; watch and update CSS
@@ -90,10 +66,26 @@
   :profiles {:dev {:dependencies [[figwheel-sidecar "0.5.14"]
                                   [com.cemerick/piggieback "0.2.2"]]
                    ;; need to add dev source path here to get user.clj loaded
-                   :source-paths ["src" "dev"]
+                   :cljsbuild {:builds {:dev {:source-paths ["src/cljs"]
+                                              :figwheel true
+                                              :compiler {:main hablamos.core
+                                                         :asset-path "js/compiled/out"
+                                                         :output-to "resources/public/js/compiled/hablamos.js"
+                                                         :output-dir "resources/public/js/compiled/out"
+                                                         :source-map-timestamp true}}}}
+
                    ;; for CIDER
                    ;; :plugins [[cider/cider-nrepl "0.12.0"]]
                    :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
                    ;; need to add the compliled assets to the :clean-targets
                    :clean-targets ^{:protect false} ["resources/public/js/compiled"
-                                                     :target-path]}})
+                                                     :target-path]}
+             :uberjar {:prep-tasks ["compile" ["cljsbuild" "once" "min"]]
+                       :aot :all
+                       :cljsbuild {:builds {:min {:source-paths ["src/cljs"]
+                                                  :compiler {:output-to "resources/public/js/compiled/hablamos.js"
+                                                             :asset-path "js/compiled/out"
+                                                             :output-dir "resources/public/js/compiled/out"
+                                                             :main hablamos.core
+                                                             :optimizations :advanced
+                                                             :pretty-print false}}}}}})

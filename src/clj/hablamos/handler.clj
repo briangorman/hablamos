@@ -5,6 +5,7 @@
    [compojure.core :refer :all]
    [compojure.route :as route]
    [clojure.core.async :as async]
+   [ring.util.response :as resp]
    [medley.core :refer [random-uuid]]))
 
 ; Use a transducer to append a unique id to each message
@@ -48,4 +49,6 @@
 
 (defroutes app
   (GET "/ws" [] ws-handler)
+  (GET "/" [] (resp/resource-response "index.html" {:root "public"}))
+  (route/resources "/")
   (route/not-found "<h1>Page not found</h1>"))
