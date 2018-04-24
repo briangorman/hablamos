@@ -5,5 +5,5 @@
 
 (defn -main
   "I don't do a whole lot ... yet."
-  [&]
-  (hk/run-server h/app {:port (or (Integer. (System/getenv "PORT")) 8080)}))
+  [& [port]]
+  (hk/run-server h/app {:port (or (Integer. port) 8080)}))

@@ -20,6 +20,7 @@
   :source-paths ["src/clj"]
   :main hablamos.main
   :aot hablamos.main
+  :uberjar-name "hablamos-standalone.jar"
   :resource-paths ["resources"]
   :figwheel {:server-port 3449 ;; default
              ;; :server-ip "127.0.0.1"
