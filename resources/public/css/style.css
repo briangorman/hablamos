@@ -9,7 +9,7 @@ body {
 	display: grid;
 	width: 100vw;
 	height: 100vh;
-	grid-template-rows: 50px 1fr 1fr  150px;
+	grid-template-rows: 50px 0px 1fr  150px;
 	grid-template-columns: 1fr;
 	grid-template-areas: "header"
 			     "sidebar"
