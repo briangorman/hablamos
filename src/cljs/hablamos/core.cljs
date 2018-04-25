@@ -76,10 +76,14 @@
                    :class "button-primary"} "Send"]]]])))
 
 (defn chat-history []
-  (fn []
-    [:div {:class "history"}
-     (for [m @msg-list]
-       ^{:key (:id m)} [:p (str (:user m) ": " (:msg m))])]))
+  (reagent/create-class
+    {:render (fn []
+               [:div {:class "history"}
+                (for [m @msg-list]
+                  ^{:key (:id m)} [:p (str (:user m) ": " (:msg m))])])
+     :component-did-update (fn [this]
+                             (let [node (reagent/dom-node this)]
+                               (set! (.-scrollTop node) (.-scrollHeight node))))}))
 
 (defn login-view []
   (let [v (atom nil)]
