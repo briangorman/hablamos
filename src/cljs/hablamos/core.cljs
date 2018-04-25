@@ -64,7 +64,8 @@
                       (.preventDefault x)
                       (when-let [msg @v] (send-msg {:msg msg
                                                     :user (:user @app-state)
-                                                    :m-type :chat})))}
+                                                    :m-type :chat}))
+                      (reset! v nil))}
         [:div {:style {:display "flex"
                        :flex-direction "column"}}
          [:input {:type "text"
