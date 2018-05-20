@@ -6,6 +6,8 @@ using websockets, http-kit, chord, core.async, reagent and CSS Grid.
 Users can send messages, and clients are kept up to date about the presence
 of other users in the room.
 
+The project is deployed to https://hablamos-chat.herokuapp.com
+
 ### Running the project
 
 This project is configured to run with figwheel at local port 3449
