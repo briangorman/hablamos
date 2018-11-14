@@ -105,12 +105,11 @@
                    :class "button-primary"} "Start chatting"]]]])))
 
 (defn sidebar []
-  (fn []
-    [:div {:class "sidebar"}
-     [:h5 "Active Users:"]
-     (into [:ul]
-           (for [[k v] @users]
-             ^{:key k} [:li v]))]))
+  [:div {:class "sidebar"}
+   [:h5 "Active Users:"]
+   (into [:ul]
+         (for [[k v] @users]
+           ^{:key k} [:li v]))])
 
 (defn chat-view []
   [:div {:class "chat-container"}
